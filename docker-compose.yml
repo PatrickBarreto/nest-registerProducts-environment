@@ -1,0 +1,124 @@
+version: '3'
+
+services: 
+  users-service-app: 
+    build: .
+    container_name: users-service-app
+    ports: 
+      - 3000:3000
+    volumes:
+      - ./users-service:/home/node/app
+    command: "npm run start:dev"
+    restart: always
+    networks:
+      - users-network
+
+  users-service-db:
+    container_name: users-service-db
+    image: mysql:8.0
+    ports: 
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=users-service-db
+    volumes:
+      - ./users-service/data-base:/var/lib/mysql
+    networks:
+      - users-network
+
+  users-service-db-test:
+    container_name: users-service-db-test
+    image: mysql:8.0
+    ports: 
+      - 3396:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=users-service-db-test
+    networks:
+      - users-network
+
+
+
+  products-service-app: 
+    build: .
+    container_name: products-service-app
+    ports: 
+      - 3001:3000
+    volumes:
+      - ./products-service:/home/node/app
+    command: "npm run start:dev"
+    restart: always
+    networks:
+      - products-network
+  
+  products-service-db:
+    container_name: products-service-db
+    image: mysql:8.0
+    ports: 
+      - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=products-service-db
+    volumes:
+      - ./products-service/data-base:/var/lib/mysql
+    networks:
+      - products-network
+
+  products-service-db-test:
+    container_name: products-service-db-test
+    image: mysql:8.0
+    ports: 
+      - 3397:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=products-service-db-test
+    networks:
+      - products-network
+
+
+
+  category-service-app: 
+    build: .
+    container_name: category-service-app
+    ports: 
+      - 3002:3000
+    volumes:
+      - ./category-service:/home/node/app
+    command: "npm run start:dev"
+    restart: always
+    networks:
+      - category-network
+  
+  category-service-db:
+    container_name: category-service-db
+    image: mysql:8.0
+    ports: 
+      - 3308:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=category-service-db
+    restart: always
+    volumes:
+      - ./category-service/data-base:/var/lib/mysql
+    networks:
+      - category-network
+
+  category-service-db-test:
+    container_name: category-service-db-test
+    image: mysql:8.0
+    ports: 
+      - 3398:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=category-service-db-test
+    restart: always
+    networks:
+      - category-network
+
+networks:
+  users-network:
+    driver: bridge
+  category-network:
+    driver: bridge
+  products-network:
+    driver: bridge
